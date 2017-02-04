@@ -95,16 +95,8 @@ static void delay_us(uint32_t time)
 	while(dualtimer_get_value(DUALTIMER_TIMER1)){}
 }
 
-int main(void)
+static void generate_test_pattern()
 {
-    /* Initialize the SAM system */
-    system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
-	configure_timer();
-	configure_timer_callback();
-	configure_gpio_pins();
-	configure_dualtimer();
-	Setup(&module);
-
 	for(uint8_t i=0;i<32;i++)
 	{
 		for(uint8_t j=0;j<24;j++)
@@ -149,17 +141,30 @@ int main(void)
 			frameBuffer[i][j] = 0xFF;
 		}
 	}
+}
+
+int main(void)
+{
+    /* Initialize the SAM system */
+    system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
+	configure_timer();
+	configure_timer_callback();
+	configure_gpio_pins();
+	configure_dualtimer();
+	Setup(&module);
+	
+
 	//delay_us(100000);
 	//ClearDisplay(&module);
 	//Transfer(frameBuffer,0,50,&module);
 	//Display(&module);
+	ClearBuffer(frameBuffer);
+	//ClearDisplay(&module);
 	while(1){
-		//Transfer(frameBuffer,0,50,&module);
-		//Display(&module);
-		delay_us(1000000);
-		//ClearDisplay(&module);
+		ClearDisplay(&module);
 		delay_us(1000000);
 		Transfer(frameBuffer,1,128,&module);
+		delay_us(1000000);
 
 	}
 }

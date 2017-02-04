@@ -2,7 +2,11 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
+microsoftSansSerif_8pt.c
+
 src\ASF\sam0\drivers\dualtimer\dualtimer.c
+
+src\font\microsoftSansSerif_8pt.c
 
 src\MemoryLCD\MemLCD.c
 

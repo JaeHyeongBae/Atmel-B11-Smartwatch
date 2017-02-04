@@ -474,7 +474,9 @@
     <Folder Include="src\ASF\thirdparty\CMSIS\Lib\" />
     <Folder Include="src\ASF\thirdparty\CMSIS\Lib\GCC\" />
     <Folder Include="src\config\" />
+    <Folder Include="src\font\microsoftSansSerif_8pt" />
     <Folder Include="src\MemoryLCD" />
+    <Folder Include="src\font" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\ASF\sam0\drivers\dualtimer\dualtimer.h">
@@ -484,6 +486,15 @@
       <SubType>compile</SubType>
     </None>
     <Compile Include="src\ASF\sam0\drivers\dualtimer\dualtimer.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\font\bitmap_db.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\font\microsoftSansSerif_8pt\microsoftSansSerif_8pt.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\font\microsoftSansSerif_8pt\microsoftSansSerif_8pt.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\MemoryLCD\MemLCD.c">

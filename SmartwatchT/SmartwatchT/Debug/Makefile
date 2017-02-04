@@ -80,12 +80,15 @@ SUBDIRS :=  \
 ../src/ASF/thirdparty/CMSIS/Lib/ \
 ../src/ASF/thirdparty/CMSIS/Lib/GCC/ \
 ../src/config/ \
-../src/MemoryLCD
+../src/MemoryLCD \
+../src/font
 
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
+../microsoftSansSerif_8pt.c \
 ../src/ASF/sam0/drivers/dualtimer/dualtimer.c \
+../src/font/microsoftSansSerif_8pt.c \
 ../src/MemoryLCD/MemLCD.c \
 ../src/ASF/common/utils/interrupt/interrupt_sam_nvic.c \
 ../src/ASF/sam0/boards/samb11_xplained_pro/board_init.c \
@@ -108,7 +111,9 @@ ASM_SRCS +=
 
 
 OBJS +=  \
+microsoftSansSerif_8pt.o \
 src/ASF/sam0/drivers/dualtimer/dualtimer.o \
+src/font/microsoftSansSerif_8pt.o \
 src/MemoryLCD/MemLCD.o \
 src/ASF/common/utils/interrupt/interrupt_sam_nvic.o \
 src/ASF/sam0/boards/samb11_xplained_pro/board_init.o \
@@ -124,7 +129,9 @@ src/ASF/sam0/utils/syscalls/gcc/syscalls.o \
 src/main_sam_b.o
 
 OBJS_AS_ARGS +=  \
+microsoftSansSerif_8pt.o \
 src/ASF/sam0/drivers/dualtimer/dualtimer.o \
+src/font/microsoftSansSerif_8pt.o \
 src/MemoryLCD/MemLCD.o \
 src/ASF/common/utils/interrupt/interrupt_sam_nvic.o \
 src/ASF/sam0/boards/samb11_xplained_pro/board_init.o \
@@ -140,7 +147,9 @@ src/ASF/sam0/utils/syscalls/gcc/syscalls.o \
 src/main_sam_b.o
 
 C_DEPS +=  \
+microsoftSansSerif_8pt.d \
 src/ASF/sam0/drivers/dualtimer/dualtimer.d \
+src/font/microsoftSansSerif_8pt.d \
 src/MemoryLCD/MemLCD.d \
 src/ASF/common/utils/interrupt/interrupt_sam_nvic.d \
 src/ASF/sam0/boards/samb11_xplained_pro/board_init.d \
@@ -156,7 +165,9 @@ src/ASF/sam0/utils/syscalls/gcc/syscalls.d \
 src/main_sam_b.d
 
 C_DEPS_AS_ARGS +=  \
+microsoftSansSerif_8pt.d \
 src/ASF/sam0/drivers/dualtimer/dualtimer.d \
+src/font/microsoftSansSerif_8pt.d \
 src/MemoryLCD/MemLCD.d \
 src/ASF/common/utils/interrupt/interrupt_sam_nvic.d \
 src/ASF/sam0/boards/samb11_xplained_pro/board_init.d \
@@ -215,7 +226,25 @@ LINKER_SCRIPT_DEP+=  \
 
 
 
+
+
+
+
+./%.o: .././%.c
+	@echo Building file: $<
+	@echo Invoking: ARM/GNU C Compiler : 5.3.1
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-gcc.exe$(QUOTE)  -x c -mthumb -D__SAMB11G18A__ -DDEBUG -D__SAMB11G18A__ -DBOARD=SAMB11_XPLAINED_PRO -DARM_MATH_CM0PLUS=true -DSPI_CALLBACK_MODE=true  -I"../src/ASF/common/boards" -I"../src/ASF/sam0/utils" -I"../src/ASF/sam0/utils/header_files" -I"../src/ASF/sam0/utils/preprocessor" -I"../src/ASF/thirdparty/CMSIS/Include" -I"../src/ASF/thirdparty/CMSIS/Lib/GCC" -I"../src/ASF/common/utils" -I"../src/ASF/sam0/utils/cmsis/samb11/include" -I"../src/ASF/sam0/utils/cmsis/samb11/source" -I"../src/ASF/sam0/boards/samb11_xplained_pro" -I"../src/ASF/sam0/boards" -I"../src" -I"../src/config" -I"../src/ASF/sam0/drivers/spi_flash" -I"../src/ASF/sam0/drivers/timer" -I"../src/ASF/sam0/drivers/gpio" -I"../src/ASF/sam0/drivers/spi" -I"../src/ASF/sam0/drivers/system" -I"../src/ASF/sam0/drivers/dualtimer"  -O1 -fdata-sections -ffunction-sections -mlong-calls -g3 -Wall -mcpu=cortex-m0 -c -pipe -fno-strict-aliasing -Wall -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -std=gnu99 -ffunction-sections -fdata-sections -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int -Wmain -Wparentheses -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas -Wfloat-equal -Wundef -Wshadow -Wbad-function-cast -Wwrite-strings -Wsign-compare -Waggregate-return  -Wmissing-declarations -Wformat -Wmissing-format-attribute -Wno-deprecated-declarations -Wpacked -Wredundant-decls -Wnested-externs -Wlong-long -Wunreachable-code -Wcast-align --param max-inline-insns-single=500 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
 src/ASF/sam0/drivers/dualtimer/%.o: ../src/ASF/sam0/drivers/dualtimer/%.c
+	@echo Building file: $<
+	@echo Invoking: ARM/GNU C Compiler : 5.3.1
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-gcc.exe$(QUOTE)  -x c -mthumb -D__SAMB11G18A__ -DDEBUG -D__SAMB11G18A__ -DBOARD=SAMB11_XPLAINED_PRO -DARM_MATH_CM0PLUS=true -DSPI_CALLBACK_MODE=true  -I"../src/ASF/common/boards" -I"../src/ASF/sam0/utils" -I"../src/ASF/sam0/utils/header_files" -I"../src/ASF/sam0/utils/preprocessor" -I"../src/ASF/thirdparty/CMSIS/Include" -I"../src/ASF/thirdparty/CMSIS/Lib/GCC" -I"../src/ASF/common/utils" -I"../src/ASF/sam0/utils/cmsis/samb11/include" -I"../src/ASF/sam0/utils/cmsis/samb11/source" -I"../src/ASF/sam0/boards/samb11_xplained_pro" -I"../src/ASF/sam0/boards" -I"../src" -I"../src/config" -I"../src/ASF/sam0/drivers/spi_flash" -I"../src/ASF/sam0/drivers/timer" -I"../src/ASF/sam0/drivers/gpio" -I"../src/ASF/sam0/drivers/spi" -I"../src/ASF/sam0/drivers/system" -I"../src/ASF/sam0/drivers/dualtimer"  -O1 -fdata-sections -ffunction-sections -mlong-calls -g3 -Wall -mcpu=cortex-m0 -c -pipe -fno-strict-aliasing -Wall -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -std=gnu99 -ffunction-sections -fdata-sections -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int -Wmain -Wparentheses -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas -Wfloat-equal -Wundef -Wshadow -Wbad-function-cast -Wwrite-strings -Wsign-compare -Waggregate-return  -Wmissing-declarations -Wformat -Wmissing-format-attribute -Wno-deprecated-declarations -Wpacked -Wredundant-decls -Wnested-externs -Wlong-long -Wunreachable-code -Wcast-align --param max-inline-insns-single=500 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+src/font/%.o: ../src/font/%.c
 	@echo Building file: $<
 	@echo Invoking: ARM/GNU C Compiler : 5.3.1
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-gcc.exe$(QUOTE)  -x c -mthumb -D__SAMB11G18A__ -DDEBUG -D__SAMB11G18A__ -DBOARD=SAMB11_XPLAINED_PRO -DARM_MATH_CM0PLUS=true -DSPI_CALLBACK_MODE=true  -I"../src/ASF/common/boards" -I"../src/ASF/sam0/utils" -I"../src/ASF/sam0/utils/header_files" -I"../src/ASF/sam0/utils/preprocessor" -I"../src/ASF/thirdparty/CMSIS/Include" -I"../src/ASF/thirdparty/CMSIS/Lib/GCC" -I"../src/ASF/common/utils" -I"../src/ASF/sam0/utils/cmsis/samb11/include" -I"../src/ASF/sam0/utils/cmsis/samb11/source" -I"../src/ASF/sam0/boards/samb11_xplained_pro" -I"../src/ASF/sam0/boards" -I"../src" -I"../src/config" -I"../src/ASF/sam0/drivers/spi_flash" -I"../src/ASF/sam0/drivers/timer" -I"../src/ASF/sam0/drivers/gpio" -I"../src/ASF/sam0/drivers/spi" -I"../src/ASF/sam0/drivers/system" -I"../src/ASF/sam0/drivers/dualtimer"  -O1 -fdata-sections -ffunction-sections -mlong-calls -g3 -Wall -mcpu=cortex-m0 -c -pipe -fno-strict-aliasing -Wall -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -std=gnu99 -ffunction-sections -fdata-sections -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int -Wmain -Wparentheses -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas -Wfloat-equal -Wundef -Wshadow -Wbad-function-cast -Wwrite-strings -Wsign-compare -Waggregate-return  -Wmissing-declarations -Wformat -Wmissing-format-attribute -Wno-deprecated-declarations -Wpacked -Wredundant-decls -Wnested-externs -Wlong-long -Wunreachable-code -Wcast-align --param max-inline-insns-single=500 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
