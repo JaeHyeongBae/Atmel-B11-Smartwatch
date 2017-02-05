@@ -1,11 +1,11 @@
 /*
 **  Font data for Microsoft Sans Serif 8pt
 */
-
+#include <asf.h>
 #include "microsoftSansSerif_8pt.h"
 
 /* Character bitmaps for Microsoft Sans Serif 8pt */
-const uint8_t microsoftSansSerif_8ptBitmaps[] =
+const uint8_t microsoftSansSerif_8ptBitmaps[1168] =
 {
 	/* @0 ' ' (2 pixels wide) */
 	0x00, //
@@ -1340,7 +1340,7 @@ const uint8_t microsoftSansSerif_8ptBitmaps[] =
 
 	/* Character descriptors for Microsoft Sans Serif 8pt */
 	/* { [Char width in bits], [Offset into microsoftSansSerif_8ptCharBitmaps in bytes] } */
-	const FONT_CHAR_INFO microsoftSansSerif_8ptDescriptors[] =
+	const FONT_CHAR_INFO microsoftSansSerif_8ptDescriptors[95] =
 	{
 		{2, 0}, 		/*   */
 		{1, 12}, 		/* ! */
@@ -1442,7 +1442,7 @@ const uint8_t microsoftSansSerif_8ptBitmaps[] =
 	/* Font information for Microsoft Sans Serif 8pt */
 	const FONT_INFO microsoftSansSerif_8ptFontInfo =
 	{
-		2, /*  Character height */
+		12, /*  Character height */
 		' ', /*  Start character */
 		'~', /*  End character */
 		microsoftSansSerif_8ptDescriptors, /*  Character descriptor array */

@@ -160,9 +160,20 @@ int main(void)
 	//Display(&module);
 	ClearBuffer(frameBuffer);
 	//ClearDisplay(&module);
+	char* str = "Hello World!";
+	char* str1 = "albireo@khu.ac.kr";
+	char* str2 = "KHLUG";
+	char* str3 = "12:11 am";
+	char* str4 = "2017-02-06";
+	draw_string(str, strlen(str), frameBuffer, 1, 1, BLACK, WHITE);
+	draw_string(str1, strlen(str1), frameBuffer, 1, 17, RED, WHITE);
+	draw_string(str2, strlen(str2), frameBuffer, 1, 33, WHITE, BLUE);
+	draw_string(str3, strlen(str3), frameBuffer, 1, 49, GREEN, WHITE);
+	draw_string(str4, strlen(str4), frameBuffer, 1, 65, CYAN, BLACK);
+
 	while(1){
-		ClearDisplay(&module);
-		delay_us(1000000);
+		//ClearDisplay(&module);
+		//delay_us(1000000);
 		Transfer(frameBuffer,1,128,&module);
 		delay_us(1000000);
 

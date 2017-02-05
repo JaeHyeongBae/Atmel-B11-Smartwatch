@@ -26,12 +26,12 @@ extern const uint8_t BLUE;
 extern const uint8_t MAGENTA;
 extern const uint8_t CYAN;
 
- void Transfer (uint8_t frameBuffer[FRAME_HEIGHT][FRAME_WIDTH], uint8_t startLine, uint8_t endLine, LCDSPIModule*); // transfers line (startLine) to line(endLine)(inclusive) to MemoryLCD
- void Display(LCDSPIModule*);
- void ClearDisplay(LCDSPIModule*);
- void Enable (void);
- void Disable (void);
- void ClearBuffer(uint8_t frameBuffer[FRAME_HEIGHT][FRAME_WIDTH]);
- void Setup(LCDSPIModule*);
-
- void generate_color_test_pattern(uint8_t frameBuffer[FRAME_HEIGHT][FRAME_WIDTH]);
+void Transfer (uint8_t frameBuffer[FRAME_HEIGHT][FRAME_WIDTH], uint8_t startLine, uint8_t endLine, LCDSPIModule*); // transfers line (startLine) to line(endLine)(inclusive) to MemoryLCD
+void Display(LCDSPIModule*);
+void ClearDisplay(LCDSPIModule*);
+void Enable (void);
+void Disable (void);
+void ClearBuffer(uint8_t frameBuffer[FRAME_HEIGHT][FRAME_WIDTH]);
+void Setup(LCDSPIModule*);
+void generate_color_test_pattern(uint8_t frameBuffer[FRAME_HEIGHT][FRAME_WIDTH]);
+void draw_string(char* string, uint8_t length, uint8_t frameBuffer[FRAME_HEIGHT][FRAME_WIDTH], uint8_t x, uint8_t y, uint8_t font_color, uint8_t bg_color);

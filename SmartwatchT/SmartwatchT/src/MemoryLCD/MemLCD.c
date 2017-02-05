@@ -5,7 +5,8 @@
 *  Author: Albireo
 */
 #include "MemLCD.h"
-
+#include "font/bitmap_db.h"
+#include "font/microsoftSansSerif_8pt/microsoftSansSerif_8pt.h"
 #define SLAVE_SELECT_PIN  CONF_PIN_SPI_SSN
 
 const uint8_t BLACK   = 0x00;
@@ -17,13 +18,59 @@ const uint8_t BLUE	  = 0x20;
 const uint8_t MAGENTA = 0xA0;
 const uint8_t CYAN	  = 0x60;
 
-static void draw_pixel(uint8_t frameBuffer[FRAME_HEIGHT][FRAME_WIDTH], uint8_t x, uint8_t y, uint8_t color)
+static void draw_pixel(uint8_t frameBuffer[FRAME_HEIGHT][FRAME_WIDTH], uint8_t x, uint8_t y, uint8_t color) // Write single pixel to frameBuffer
 {
 	uint8_t bit_offset = (x*3)&0x07;
 	frameBuffer[y][(x*3)>>3] = (frameBuffer[y][(x*3)>>3] & ~(0xE0>>bit_offset)) | (color>>bit_offset);
 	if (bit_offset > 5)
 	{
 		frameBuffer[y][((x*3)>>3)+1] = (frameBuffer[y][((x*3)>>3)+1] & (0xFF>>(bit_offset-5))) | (color << (8-bit_offset));
+	}
+}
+
+static void draw_char(char c,uint8_t frameBuffer[FRAME_HEIGHT][FRAME_WIDTH], uint8_t x, uint8_t y, uint8_t font_color, uint8_t bg_color) // Write single character to frameBuffer
+{
+	for (uint8_t line_count = 0 ; (line_count < microsoftSansSerif_8ptFontInfo.height) & ((y + line_count) < FRAME_HEIGHT); line_count++)
+	{
+		if (microsoftSansSerif_8ptDescriptors[c - microsoftSansSerif_8ptFontInfo.startChar].widthBits < 9)
+		{
+			for (uint8_t bit_offset = 0 ; (bit_offset < microsoftSansSerif_8ptDescriptors[c - microsoftSansSerif_8ptFontInfo.startChar].widthBits) & ((x + bit_offset) < 128) ; bit_offset++)
+			{
+				if(microsoftSansSerif_8ptBitmaps[microsoftSansSerif_8ptDescriptors[c - microsoftSansSerif_8ptFontInfo.startChar].offset + line_count] & (0x80>>bit_offset)) draw_pixel(frameBuffer, x + bit_offset, y + line_count, font_color);
+				else draw_pixel(frameBuffer, x + bit_offset, y + line_count, bg_color);
+			}
+		} 
+		else
+		{
+			for (uint8_t bit_offset = 0 ; (bit_offset < 8) & ((x + bit_offset) < 128) ; bit_offset++)
+			{
+				if(microsoftSansSerif_8ptBitmaps[microsoftSansSerif_8ptDescriptors[c - microsoftSansSerif_8ptFontInfo.startChar].offset + line_count*2] & (0x80>>bit_offset)) draw_pixel(frameBuffer, x + bit_offset, y + line_count, font_color);
+				else draw_pixel(frameBuffer, x + bit_offset, y + line_count, bg_color);
+			}
+			for (uint8_t bit_offset = 0 ; (bit_offset < microsoftSansSerif_8ptDescriptors[c - microsoftSansSerif_8ptFontInfo.startChar].widthBits - 8) & ((x + bit_offset) < 128) ; bit_offset++)
+			{
+				if(microsoftSansSerif_8ptBitmaps[microsoftSansSerif_8ptDescriptors[c - microsoftSansSerif_8ptFontInfo.startChar].offset + line_count*2 + 1] & (0x80>>bit_offset)) draw_pixel(frameBuffer, x + 8 + bit_offset, y + line_count, font_color);
+				else draw_pixel(frameBuffer, x + 8 + bit_offset, y + line_count, bg_color);
+			}
+		}
+	}
+}
+
+void draw_string(char* string, uint8_t length, uint8_t frameBuffer[FRAME_HEIGHT][FRAME_WIDTH], uint8_t x, uint8_t y, uint8_t font_color, uint8_t bg_color)
+{
+	for(uint8_t cursor = x, i = 0 ; i < length ; i++)
+	{
+		draw_char(string[i], frameBuffer, cursor, y, font_color, bg_color);
+		cursor += microsoftSansSerif_8ptDescriptors[string[i] - microsoftSansSerif_8ptFontInfo.startChar].widthBits;
+		if(cursor < 127)
+		{
+			for(uint8_t line_count = 0 ; (line_count < microsoftSansSerif_8ptFontInfo.height) & ((y + line_count) < FRAME_HEIGHT) & (i < (length - 1)) ; line_count++)
+			{
+				draw_pixel(frameBuffer, cursor, y + line_count, bg_color);
+			}
+			cursor++;
+		}
+		else return;
 	}
 }
 
@@ -163,7 +210,8 @@ void generate_color_test_pattern(uint8_t frameBuffer[FRAME_HEIGHT][FRAME_WIDTH])
 
 void Transfer(uint8_t frameBuffer[FRAME_HEIGHT][FRAME_WIDTH], uint8_t startLine, uint8_t endLine, LCDSPIModule* module)
 {
-	generate_color_test_pattern(frameBuffer);
+	//generate_color_test_pattern(frameBuffer);
+
 	//! [select_slave]
 	gpio_pin_set_output_level(PIN_LP_GPIO_16, true);
 	//! [select_slave]
@@ -247,6 +295,6 @@ void ClearBuffer(uint8_t frameBuffer[FRAME_HEIGHT][FRAME_WIDTH])
 {
 	for(uint8_t i=0;i<FRAME_HEIGHT;i++)
 		for(uint8_t j=0;j<FRAME_WIDTH;j++)
-			frameBuffer[i][j] = 0;
+			frameBuffer[i][j] = 0xFF;
 
 }

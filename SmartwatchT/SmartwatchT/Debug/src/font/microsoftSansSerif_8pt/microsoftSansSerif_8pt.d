@@ -1,5 +1,7 @@
-src/MemoryLCD/MemLCD.d src/MemoryLCD/MemLCD.o: ../src/MemoryLCD/MemLCD.c \
- ../src/MemoryLCD/MemLCD.h ../src/asf.h ../src/ASF/sam0/utils/compiler.h \
+src/font/microsoftSansSerif_8pt/microsoftSansSerif_8pt.d \
+ src/font/microsoftSansSerif_8pt/microsoftSansSerif_8pt.o: \
+ ../src/font/microsoftSansSerif_8pt/microsoftSansSerif_8pt.c ../src/asf.h \
+ ../src/ASF/sam0/utils/compiler.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\lib\gcc\arm-none-eabi\5.3.1\include\stddef.h \
  ../src/ASF/common/utils/parts.h ../src/ASF/sam0/utils/status_codes.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\lib\gcc\arm-none-eabi\5.3.1\include\stdint.h \
@@ -103,10 +105,9 @@ src/MemoryLCD/MemLCD.d src/MemoryLCD/MemLCD.o: ../src/MemoryLCD/MemLCD.c \
  ../src/config/conf_spi.h ../src/ASF/sam0/drivers/spi/spi_callback.h \
  ../src/ASF/sam0/drivers/spi/spi.h \
  ../src/ASF/sam0/drivers/spi_flash/spi_flash.h \
- ../src/ASF/sam0/drivers/timer/timer.h ../src/font/bitmap_db.h \
- ../src/font/microsoftSansSerif_8pt/microsoftSansSerif_8pt.h
-
-../src/MemoryLCD/MemLCD.h:
+ ../src/ASF/sam0/drivers/timer/timer.h \
+ ../src/font/microsoftSansSerif_8pt/microsoftSansSerif_8pt.h \
+ ../src/font/bitmap_db.h
 
 ../src/asf.h:
 
@@ -328,6 +329,6 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-no
 
 ../src/ASF/sam0/drivers/timer/timer.h:
 
-../src/font/bitmap_db.h:
-
 ../src/font/microsoftSansSerif_8pt/microsoftSansSerif_8pt.h:
+
+../src/font/bitmap_db.h:
