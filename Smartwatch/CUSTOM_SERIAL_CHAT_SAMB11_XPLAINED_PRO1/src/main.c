@@ -53,6 +53,9 @@
 #include "font.h"
 
 #define APP_STACK_SIZE  (1024)
+#define NOTIFICATION_STACK_SIZE 20
+
+#define SIZE 10;
 
 volatile unsigned char app_stack_patch[APP_STACK_SIZE];
 
@@ -80,6 +83,22 @@ bool media_playing = true;
 
 bool update_watchface_flag = false;
 bool draw_flag = false;
+
+typedef struct  
+{
+	uint8_t notif_id;
+	uint8_t app_id;
+	char* title;
+	uint8_t title_length;
+	char* text;
+	uint8_t text_length;
+	uint8_t hour;
+	uint8_t minute;
+}Notification;
+
+Notification *notification_stack[NOTIFICATION_STACK_SIZE];
+
+uint8_t notif_sp = 0;
 
 static const char *str_day[7] =
 {
@@ -183,14 +202,37 @@ static void csc_app_recv_buf(uint8_t *recv_data, uint8_t recv_len)
 		}
 		DBG_LOG("\r\n");
 	}
-	draw_string(recv_data, recv_len, frameBuffer, 1, 1, BLACK, WHITE, msSans8pt);
+	draw_string((char*)recv_data, recv_len, frameBuffer, 1, 1, BLACK, WHITE, msSans8pt);
 	draw_flag = true;
+	
+	Notification *notif;
+	
 	switch(recv_data[0])
 	{
 		case 't' :
 		hour = recv_data[1];
 		minute = recv_data[2];
 		break;
+		
+		case 'd' :
+		date = recv_data[1];
+		month = recv_data[2];
+		day = recv_data[3];
+		break;
+		
+		case 'n' :
+		notif = (Notification*)malloc(sizeof(Notification));
+		notif->notif_id = recv_data[1];
+		notif->app_id = recv_data[2];
+		notif->title_length = recv_data[3];
+		notif->text_length = recv_data[4];
+		notif->hour = recv_data[5];
+		notif->title = strncpy((char*)malloc(recv_data[3]), (char*)&recv_data[6], recv_data[3]);
+		notif->text = strncpy((char*)malloc(recv_data[4]), (char*)&recv_data[6+recv_data[3]], recv_data[4]);
+		notification_stack[notif_sp] = notif;
+		break;
+		
+		
 	}
 }
 
@@ -283,54 +325,6 @@ static void delay_us(uint32_t time)
 {
 	dualtimer_set_counter(DUALTIMER_TIMER1,DUALTIMER_SET_CURRUNT_REG, time*26);
 	while(dualtimer_get_value(DUALTIMER_TIMER1)){}
-}
-
-static void generate_test_pattern()
-{
-	for(uint8_t i=0;i<32;i++)
-	{
-		for(uint8_t j=0;j<24;j++)
-		{
-			frameBuffer[i][j] = 0xFF;
-		}
-		for(uint8_t j=24;j<48;j++)
-		{
-			frameBuffer[i][j] = 0x00;
-		}
-	}
-	for(uint8_t i=32;i<64;i++)
-	{
-		for(uint8_t j=0;j<24;j++)
-		{
-			frameBuffer[i][j] = 0x00;
-		}
-		for(uint8_t j=24;j<48;j++)
-		{
-			frameBuffer[i][j] = 0xFF;
-		}
-	}
-	for(uint8_t i=64;i<96;i++)
-	{
-		for(uint8_t j=0;j<24;j++)
-		{
-			frameBuffer[i][j] = 0xFF;
-		}
-		for(uint8_t j=24;j<48;j++)
-		{
-			frameBuffer[i][j] = 0x00;
-		}
-	}
-	for(uint8_t i=96;i<128;i++)
-	{
-		for(uint8_t j=0;j<24;j++)
-		{
-			frameBuffer[i][j] = 0x00;
-		}
-		for(uint8_t j=24;j<48;j++)
-		{
-			frameBuffer[i][j] = 0xFF;
-		}
-	}
 }
 
 static void csc_init()
