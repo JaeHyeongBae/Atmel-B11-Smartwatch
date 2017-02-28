@@ -41,6 +41,7 @@
 //#define DONT_USE_CMSIS_INIT
 
 #include <asf.h>
+#include <stdlib.h>
 #include "MemLCD.h"
 #include "platform.h"
 #include "console_serial.h"
@@ -221,17 +222,36 @@ static void csc_app_recv_buf(uint8_t *recv_data, uint8_t recv_len)
 		break;
 		
 		case 'n' :
-		notif = (Notification*)malloc(sizeof(Notification));
-		notif->notif_id = recv_data[1];
-		notif->app_id = recv_data[2];
-		notif->title_length = recv_data[3];
-		notif->text_length = recv_data[4];
-		notif->hour = recv_data[5];
-		notif->title = strncpy((char*)malloc(recv_data[3]), (char*)&recv_data[6], recv_data[3]);
-		notif->text = strncpy((char*)malloc(recv_data[4]), (char*)&recv_data[6+recv_data[3]], recv_data[4]);
-		notification_stack[notif_sp] = notif;
+		if (notif_sp < NOTIFICATION_STACK_SIZE)
+		{
+			notif = (Notification*)malloc(sizeof(Notification));
+			notif->notif_id = recv_data[1];
+			notif->app_id = recv_data[2];
+			notif->title_length = recv_data[3];
+			notif->text_length = recv_data[4];
+			notif->hour = recv_data[5];
+			notif->title = strncpy((char*)malloc(recv_data[3]), (char*)(recv_data+6), recv_data[3]);
+			notif->text = strncpy((char*)malloc(recv_data[4]), (char*)(recv_data+6+recv_data[3]), recv_data[4]);
+			notification_stack[notif_sp] = notif;
+			notif_sp++;
+		}
 		break;
 		
+		case 'r' :
+			for(uint8_t i = 0; i < notif_sp; i++)
+			{
+				if(notification_stack[i]->notif_id == recv_data[1])
+				{
+					free(notification_stack[i]);
+					for(uint8_t j = (i+1); j < notif_sp; j++)
+					{
+						notification_stack[j-1] = notification_stack[j];
+					}
+					notif_sp--;
+					break;
+				}
+			}
+		break;
 		
 	}
 }
